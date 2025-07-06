@@ -1,5 +1,13 @@
+// EmployeeForm.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Alert,
+  Button, ScrollView, StyleSheet,
+  Text, TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import apiClient from '../utils/apiClient'; // Adjust path as needed
 
 export default function EmployeeForm({ navigation }) {
   const [data, setData] = useState({
@@ -19,7 +27,10 @@ export default function EmployeeForm({ navigation }) {
 
   const addTraining = () => {
     if (trainingText.trim() !== '') {
-      setData(prev => ({ ...prev, training: [...prev.training, trainingText.trim()] }));
+      setData(prev => ({
+        ...prev,
+        training: [...prev.training, trainingText.trim()]
+      }));
       setTrainingText('');
     }
   };
@@ -31,9 +42,21 @@ export default function EmployeeForm({ navigation }) {
     }));
   };
 
-  const handleSubmit = () => {
-    navigation.navigate('EmployeeDetailsScreen', { data });
+  const handleSubmit = async () => {
+    try {
+      const response = await apiClient('emp/employee', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+  
+      Alert.alert('Success', 'Employee Created');
+      navigation.navigate('EmployeeDetailsScreen', { data: response.data });
+    } catch (error) {
+      console.error('Submission failed:', error);
+      Alert.alert('Error', error.message || 'Failed to create employee');
+    }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -71,7 +94,6 @@ export default function EmployeeForm({ navigation }) {
         onChangeText={text => handleChange('address', text)}
       />
 
-      {/* Training input and add button */}
       <View style={styles.trainingInputRow}>
         <TextInput
           style={[styles.input, { flex: 1 }]}
@@ -82,7 +104,6 @@ export default function EmployeeForm({ navigation }) {
         <Button title="Add" onPress={addTraining} />
       </View>
 
-      {/* Show training list */}
       {data.training.map((item, index) => (
         <View key={index} style={styles.trainingItem}>
           <Text style={styles.trainingText}>{index + 1}. {item}</Text>

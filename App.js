@@ -1,23 +1,35 @@
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
- // your component
+import AssetsFrom from './components/AssetsFrom';
+import EmployeeDetailsScreen from './components/EmployeeDetailsScreen';
+import EmployeeFrom from './components/EmployeeFrom';
+import AssetListScreen from './screens/AssetListScreen';
+import EmployeeListScreen from './screens/EmployeeListScreen';
 import HomeScreen from './screens/HomeScreen';
 
-import EmployeeFrom from './components/EmployeeFrom';
-import AssetsFrom from './components/AssetsFrom';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-       
-        <Stack.Screen name="EmployeeFrom" component={EmployeeFrom} />
-        <Stack.Screen name="AssetsFrom" component={AssetsFrom} />
+
+        {/* Main Home */}
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'QR Scanner' }} />
+
+        {/* Forms */}
+        <Stack.Screen name="EmployeeFrom" component={EmployeeFrom} options={{ title: 'Employee Form' }} />
+        <Stack.Screen name="AssetsFrom" component={AssetsFrom} options={{ title: 'Assets Form' }} />
+
+        {/* Details Screens */}
+        <Stack.Screen name="EmployeeDetails" component={EmployeeDetailsScreen} options={{ title: 'Employee Details' }} />
+        {/* <Stack.Screen name="AssetDetails" component={AssetDetailsScreen} options={{ title: 'Asset Details' }} /> */}
+
+        {/* Lists (optional) */}
+        <Stack.Screen name="Employees" component={EmployeeListScreen} options={{ title: 'Employees List' }} />
+        <Stack.Screen name="Assets" component={AssetListScreen} options={{ title: 'Assets List' }} />
 
       </Stack.Navigator>
     </NavigationContainer>

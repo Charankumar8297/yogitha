@@ -1,61 +1,59 @@
-// // // // // import React from 'react';
-// // // // // import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
-
-// // // // // export default function EmployeeDetailsScreen({ route }) {
-// // // // //   const { data } = route.params;
-
-// // // // //   return (
-// // // // //     <ScrollView contentContainerStyle={styles.container}>
-// // // // //       {data.profilePic && (
-// // // // //         <Image source={data.profilePic} style={styles.bigPic} />
-// // // // //       )}
-
-// // // // //       <Text style={styles.text}>Employee ID: {data.empid}</Text>
-// // // // //       <Text style={styles.text}>Name: {data.name}</Text>
-// // // // //       <Text style={styles.text}>Department: {data.dept}</Text>
-// // // // //       <Text style={styles.text}>Phone: {data.phone}</Text>
-// // // // //       <Text style={styles.text}>Address: {data.address}</Text>
-// // // // //       <Text style={styles.extra}>Steel Training: Introduction Completed</Text>
-// // // // //       <Text style={styles.extra}>Function: Pending</Text>
-// // // // //     </ScrollView>
-// // // // //   );
-// // // // // }
-
-// // // // // const styles = StyleSheet.create({
-// // // // //   container: { padding: 20, alignItems: 'center' },
-// // // // //   bigPic: { width: 150, height: 150, borderRadius: 75, marginBottom: 20 },
-// // // // //   text: { fontSize: 18, marginBottom: 8 },
-// // // // //   extra: { fontSize: 16, color: 'gray', marginTop: 4 }
-// // // // // });
-
-
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 
 export default function EmployeeDetailsScreen({ route }) {
-  const { data } = route.params;
+  const { empid } = route.params;
+  const [employee, setEmployee] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://192.168.1.13:5000/emp/employee/${empid}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch employee data');
+        return res.json();
+      })
+      .then(data => setEmployee(data))
+      .catch(err => alert(err.message))
+      .finally(() => setLoading(false));
+  }, [empid]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#6200ee" />
+      </View>
+    );
+  }
+
+  if (!employee) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ color: '#f00' }}>Employee not found.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {/* Top: Fixed employee details */}
       <View style={styles.topContainer}>
-        {data.profilePic && (
-          <Image source={data.profilePic} style={styles.bigPic} />
+        {employee.profilePicUrl ? (
+          <Image source={{ uri: employee.profilePicUrl }} style={styles.bigPic} />
+        ) : (
+          <View style={[styles.bigPic, { backgroundColor: '#ccc' }]} />
         )}
         <View style={styles.detailsContainer}>
-          <Text style={styles.text}>Employee ID: {data.empid}</Text>
-          <Text style={styles.text}>Name: {data.name}</Text>
-          <Text style={styles.text}>Department: {data.dept}</Text>
-          <Text style={styles.text}>Phone: {data.phone}</Text>
-          <Text style={styles.text}>Address: {data.address}</Text>
+          <Text style={styles.text}>Employee ID: {employee.empid}</Text>
+          <Text style={styles.text}>Name: {employee.name}</Text>
+          <Text style={styles.text}>Department: {employee.dept}</Text>
+          <Text style={styles.text}>Phone: {employee.phone}</Text>
+          <Text style={styles.text}>Address: {employee.address}</Text>
         </View>
       </View>
 
-      {/* Bottom: Scrollable training details */}
       <View style={styles.bottomContainer}>
         <Text style={styles.trainingHeader}>Training Details</Text>
         <FlatList
-          data={data.training || []}
+          data={employee.training || []}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={styles.trainingBox}>
@@ -70,6 +68,7 @@ export default function EmployeeDetailsScreen({ route }) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },

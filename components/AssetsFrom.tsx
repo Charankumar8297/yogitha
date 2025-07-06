@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { Alert, Button, ScrollView, StyleSheet, TextInput } from 'react-native';
 
 export default function AssetFormScreen({ navigation }) {
   const [form, setForm] = useState({
+    assetid: '',
     name: '',
-    id: '',
     category: '',
     purchaseDate: ''
   });
@@ -14,32 +14,57 @@ export default function AssetFormScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    // const documents = [
-    //   { id: '1', title: 'Invoice', image: require('./assets/images/document.png') },
-    //   { id: '2', title: 'Warranty', image: require('./assets/images/document.png') }
-    // ];
+    const { assetid, name, category, purchaseDate } = form;
 
-    navigation.navigate('AssetDetailsScreen', {
-      data: {
-        ...form,
-        documents
-      }
-    });
+    if (!assetid || !name || !category || !purchaseDate) {
+      Alert.alert('Validation', 'Please fill all fields');
+      return;
+    }
+
+    const assetData = { assetid, name, category, purchaseDate };
+
+    fetch('http://192.168.1.13:5000/assets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(assetData)
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => {
+            throw new Error(err.error || 'Failed to save asset');
+          });
+        }
+        return res.json();
+      })
+      .then(data => {
+        Alert.alert('Success', `Asset ${data.data.assetid} created successfully`);
+
+        // Navigate to details screen with full asset data and generated link
+        navigation.navigate('AssetDetailsScreen', {
+          data: data.data,
+          link: data.link
+        });
+      })
+      .catch(err => {
+        Alert.alert('Error', err.message);
+      });
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Asset Name"
-        value={form.name}
-        onChangeText={text => handleChange('name', text)}
+        placeholder="Asset ID"
+        value={form.assetid}
+        onChangeText={text => handleChange('assetid', text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Asset ID"
-        value={form.id}
-        onChangeText={text => handleChange('id', text)}
+        placeholder="Asset Name"
+        value={form.name}
+        onChangeText={text => handleChange('name', text)}
       />
       <TextInput
         style={styles.input}
@@ -60,13 +85,13 @@ export default function AssetFormScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    gap: 12
+    padding: 20
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
-    borderRadius: 8
+    borderRadius: 8,
+    marginBottom: 12
   }
 });
