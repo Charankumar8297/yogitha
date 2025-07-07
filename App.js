@@ -4,6 +4,7 @@ import React from 'react';
 
 import AssetsFrom from './components/AssetsFrom';
 import EmployeeDetailsScreen from './components/EmployeeDetailsScreen';
+import AssetDetailsScreen from './components/AssetsDetailsScreen';
 import EmployeeFrom from './components/EmployeeFrom';
 import AssetListScreen from './screens/AssetListScreen';
 import EmployeeListScreen from './screens/EmployeeListScreen';
@@ -25,7 +26,8 @@ export default function App() {
 
         {/* Details Screens */}
         <Stack.Screen name="EmployeeDetails" component={EmployeeDetailsScreen} options={{ title: 'Employee Details' }} />
-        {/* <Stack.Screen name="AssetDetails" component={AssetDetailsScreen} options={{ title: 'Asset Details' }} /> */}
+        {/* <Stack.Screen name="AssetDetails" component={AssetsDetailsScreen} options={{ title: 'Asset Details' }} /> */}
+        <Stack.Screen name="AssetsDetailsScreen" component={AssetDetailsScreen} />
 
         {/* Lists (optional) */}
         <Stack.Screen name="Employees" component={EmployeeListScreen} options={{ title: 'Employees List' }} />

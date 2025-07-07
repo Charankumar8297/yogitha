@@ -1,5 +1,5 @@
 // apiClient.js
-const API_BASE_URL = 'http://192.168.1.35:5000'; // Update IP and port if needed
+const API_BASE_URL = 'http://192.168.97.113:5000'; // Update IP and port if needed
 
 export default async function apiClient(path, options = {}) {
   const url = `${API_BASE_URL}/${path.replace(/^\/+|\/+$/g, '')}`;
@@ -15,3 +15,18 @@ export default async function apiClient(path, options = {}) {
 
   return data;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
