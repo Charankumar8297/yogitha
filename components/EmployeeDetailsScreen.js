@@ -7,7 +7,7 @@ export default function EmployeeDetailsScreen({ route }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://192.168.1.13:5000/emp/employee/${empid}`)
+    fetch(`http://192.168.1.35:5000/emp/employee/${empid}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch employee data');
         return res.json();
@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
   },
   trainingText: {
     fontSize: 16,
-    color: '#333'
-  }
+    color: '#333'
+  }
 });

@@ -23,7 +23,7 @@ export default function AssetFormScreen({ navigation }) {
 
     const assetData = { assetid, name, category, purchaseDate };
 
-    fetch('http://192.168.1.13:5000/assets', {
+    fetch('http://192.168.1.35:5000/assets', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
