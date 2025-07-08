@@ -287,21 +287,21 @@
 
 
 
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
-  View,
-  Image,
   TouchableOpacity,
-  ActivityIndicator,
-  Alert
+  View
 } from 'react-native';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 
-const SERVER = 'http://192.168.97.113:5000';
+    const SERVER = 'http://192.168.1.32:3000';
 
 export default function AssetDetailsScreen({ route }) {
   const { data, link } = route.params;

@@ -167,19 +167,19 @@
 
 
 
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
   Alert,
   Button,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  Image
+  View
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 
 export default function EmployeeForm({ navigation }) {
   const [data, setData] = useState({
@@ -260,7 +260,7 @@ export default function EmployeeForm({ navigation }) {
         type: data.photo.type
       });
 
-      const response = await fetch('http://192.168.97.113:5000/emp/employee', {
+      const response = await fetch('http://192.168.1.32:3000/emp/employee', {
         method: 'POST',
         body: formData
         // Don't set Content-Type, fetch will handle it
